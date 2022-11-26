@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import tensorflow as tf
 
 
 def nothing(x):
@@ -16,8 +17,8 @@ classifier = load_model('Trained_model.h5')
 def predictor():
     import numpy as np
     from keras.preprocessing import image
-    test_image = image.load_img('1.png', target_size=(64, 64))
-    test_image = image.img_to_array(test_image)
+    test_image = tf.keras.utils.load_img('C:/Users/bansa/Downloads/Hand Gesture Recognition/1.png', target_size=(64, 64))
+    test_image = tf.keras.utils.img_to_array(test_image)
     test_image = np.expand_dims(test_image, axis=0)
     result = classifier.predict(test_image)
 

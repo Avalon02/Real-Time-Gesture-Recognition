@@ -6,6 +6,7 @@ from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense, Dropout
 from keras import optimizers
+import visualkeras
 
 # Initialing the CNN
 classifier = Sequential()
@@ -16,11 +17,11 @@ classifier.add(Convolution2D(32, (3, 3), input_shape=(64, 64, 3), activation='re
 # step 2 - Pooling
 classifier.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Adding second convolution layer
+# Adding second Convolution layer
 classifier.add(Convolution2D(32, (3, 3), activation='relu'))
 classifier.add(MaxPooling2D(pool_size=(2, 2)))
 
-# Adding 3rd Concolution Layer
+# Adding 3rd Convolution Layer
 classifier.add(Convolution2D(64, (3, 3), activation='relu'))
 classifier.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -37,6 +38,7 @@ classifier.compile(
     optimizer=optimizers.SGD(lr=0.01),
     loss='categorical_crossentropy',
     metrics=['accuracy'])
+classifier.summary()
 
 # Part 2 Fitting the CNN to the image
 from keras.preprocessing.image import ImageDataGenerator
@@ -61,19 +63,19 @@ test_set = test_datagen.flow_from_directory(
     batch_size=32,
     class_mode='categorical')
 
-model = classifier.fit_generator(
+model = classifier.fit(
     training_set,
-    steps_per_epoch=800,
+    steps_per_epoch=400,
     epochs=25,
     validation_data=test_set,
-    validation_steps=6500
+    validation_steps=100
 )
 
 #Saving the model
 import h5py
 classifier.save('Trained_model.h5')
 
-print(model.history.keys())
+# print(model.history.keys())
 import matplotlib.pyplot as plt
 
 # summarize history for accuracy
@@ -93,3 +95,10 @@ plt.ylabel('loss')
 plt.xlabel('epoch')
 plt.legend(['train', 'test'], loc='upper left')
 plt.show()
+
+# visualkeras.layered_view(classifier).show() # display using your system viewer
+# visualkeras.layered_view(classifier, to_file='output.png') # write to disk
+# visualkeras.layered_view(classifier, to_file='output.png').show() # write and show
+
+# Using visualkeras to view the architecture of CNN
+visualkeras.layered_view(classifier).show()
